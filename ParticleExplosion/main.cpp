@@ -1,19 +1,30 @@
 #include <iostream>
 #include <SDL.h>
+#undef main
+
+#include "Screen.h"
 
 using namespace std;
 
-int main(int argc, char * argv[])
+int main()
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING) < 0)
+
+	Screen screen;
+	if (screen.init() == false)
+		cout << "Error initialising SDL: " << SDL_GetError << endl;
+
+	while (true)
 	{
-		cout << "SDL initialization failed. SDL Error: " << SDL_GetError();
-	}
-	else
-	{
-		cout << "SDL initialization succeeded!";
+		// Update particles
+		// Draw particles
+		// Check for messages/events
+
+		if (screen.proccessEvents() == false)
+			break;
 	}
 
-	cin.get();
+	screen.close();
+
+	system("pause");
 	return 0;
 }
