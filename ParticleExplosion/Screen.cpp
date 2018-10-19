@@ -1,6 +1,5 @@
 #include "Screen.h"
 
-
 Screen::Screen() :
 	m_window(NULL), m_renderer(NULL), m_texture(NULL), m_buffer(NULL)
 {
@@ -43,21 +42,34 @@ bool Screen::init()
 		return false;
 	}
 
-	Uint32* buffer = new Uint32[SCREEN_WIDTH*SCREEN_HEIGHT];
+	m_buffer = new Uint32[SCREEN_WIDTH*SCREEN_HEIGHT];
 
-	memset(buffer, 0, SCREEN_WIDTH*SCREEN_HEIGHT * sizeof(Uint32));
+	memset(m_buffer, 0, SCREEN_WIDTH*SCREEN_HEIGHT * sizeof(Uint32));
 
-	for (int i = 0; i < SCREEN_WIDTH*SCREEN_HEIGHT; i++)
-	{
-		buffer[i] = 0xFFF00FFF;
-	}
+	return true;
+}
 
-	SDL_UpdateTexture(m_texture, NULL, buffer, SCREEN_WIDTH * sizeof(Uint32));
+void Screen::update()
+{
+	SDL_UpdateTexture(m_texture, NULL, m_buffer, SCREEN_WIDTH * sizeof(Uint32));
 	SDL_RenderClear(m_renderer);
 	SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
 	SDL_RenderPresent(m_renderer);
+}
 
-	return true;
+void Screen::setPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue) 
+{
+	Uint32 color = 0;
+
+	color += red;
+	color <<= 8;
+	color += green;
+	color <<= 8;
+	color += blue;
+	color <<= 8;
+	color += 0xFF;
+
+	m_buffer[(y * SCREEN_WIDTH) + x] = color;
 }
 
 bool Screen::proccessEvents()
@@ -70,6 +82,7 @@ bool Screen::proccessEvents()
 			return false;
 	}
 
+	return true;
 }
 
 void Screen::close()
@@ -80,3 +93,4 @@ void Screen::close()
 	SDL_DestroyWindow(m_window);
 	SDL_Quit();
 }
+
