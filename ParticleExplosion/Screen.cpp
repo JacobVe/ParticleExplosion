@@ -55,6 +55,12 @@ void Screen::update()
 	SDL_RenderClear(m_renderer);
 	SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
 	SDL_RenderPresent(m_renderer);
+
+}
+
+void Screen::clear()
+{
+	memset(m_buffer, 0, SCREEN_WIDTH*SCREEN_HEIGHT * sizeof(Uint32));
 }
 
 void Screen::setPixel(int x, int y, Uint8 red, Uint8 green, Uint8 blue) 
